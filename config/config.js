@@ -1,1 +1,1 @@
-module.exports = {language: "pt_BR"}
+//module.exports = {}
