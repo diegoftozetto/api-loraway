@@ -24,6 +24,21 @@ const validate = require("../control/validate-input-field");
 
 /**
  * @swagger
+ * /readings/ok:
+ *   get:
+ *     tags:
+ *       - Leituras
+ *     description: Requisição de verificação.
+ *     responses:
+ *       200:
+ *         description: Ok.
+ */
+ router.get('/ok', (req, res) => {
+  res.status(200).send();
+});
+
+/**
+ * @swagger
  * /readings:
  *   get:
  *     tags:
