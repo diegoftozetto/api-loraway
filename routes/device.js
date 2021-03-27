@@ -21,7 +21,7 @@ const Reading = mongoose.model("readings");
  *          description: Falha ao processar requisição, erro ao buscar Ids dos dispositivos.
  */
 router.get('/', (req, res) => {
-  Reading.find().sort({ id: 'asc' }).then((readings) => {
+  Reading.find().sort({ deviceId: 'asc' }).then((readings) => {
     var deviceIds = [];
     readings.forEach(element => {
       if(!deviceIds.find(id => id === element.deviceId)) {
