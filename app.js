@@ -10,6 +10,7 @@ const cors = require('cors');
 
 //Rotas
 const reading = require("./routes/reading");
+const device = require("./routes/device");
 const api_docs = require("./routes/api-docs");
 
 //app
@@ -36,12 +37,27 @@ app.use(bodyParse.urlencoded({extended: false}));
 app.use(bodyParse.json());
 
 app.use(cors());
-
 ////////////////////////////////////////////////////////////
 // Rotas                                                  //
 ////////////////////////////////////////////////////////////
 app.use("/readings", reading);
+app.use("/devices", device);
 app.use("/api-docs", api_docs);
+
+/**
+ * @swagger
+ * /ok:
+ *   get:
+ *     tags:
+ *       - Verificação
+ *     description: Requisição de verificação.
+ *     responses:
+ *       200:
+ *         description: Ok.
+ */
+app.get('/ok', (req, res) => {
+  res.status(200).send();
+});
 
 ////////////////////////////////////////////////////////////
 // Outros                                                 //
