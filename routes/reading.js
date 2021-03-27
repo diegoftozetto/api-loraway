@@ -110,8 +110,6 @@ router.get('/:deviceId', (req, res) => {
  *     responses:
  *       201:
  *         description: Leitura criada com sucesso.
- *         schema:
- *           $ref: '#/definitions/Readings'
  *       400:
  *         description: Falha ao processar requisição, parâmetro(s) inválido(s).
  *       500:
@@ -129,10 +127,9 @@ router.post('/', (req, res) => {
       messageId: messageId,
       timestamp: timestamp,
       attributes: attributes
-    }).save().then((reading) => {
+    }).save().then(() => {
       res.statusCode = 201;
-      res.setHeader('Content-Type', 'application/json');
-      res.json(reading);
+      res.send();
     }).catch(() => {
       res.statusCode = 500;
       res.send();
