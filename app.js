@@ -18,6 +18,8 @@ const app = express();
 //Config. Database
 const db = require("./config/db");
 
+//TLS Reject
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 ////////////////////////////////////////////////////////////
 // Configurações                                          //
 ////////////////////////////////////////////////////////////
