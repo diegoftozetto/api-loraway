@@ -22,13 +22,7 @@ const Reading = mongoose.model("readings");
  */
 router.get('/', (req, res) => {
   Reading.find().sort({ deviceId: 'asc' }).then((readings) => {
-    var deviceIds = [];
-    readings.forEach(element => {
-      if(!deviceIds.find(id => id === element.deviceId)) {
-        deviceIds.push(element.deviceId);
-      }
-    });
-
+    var deviceIds = [...new Set(readings.map(el => el.deviceId))];
     res.statusCode = 200;
     res.setHeader('Content-Type', 'application/json');
     res.json({deviceIds});
