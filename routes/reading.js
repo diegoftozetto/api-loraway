@@ -76,7 +76,7 @@ router.get('/', (req, res) => {
  *          description: Falha ao processar requisição, erro ao buscar leituras no Database.
  */
 router.get('/:deviceId?', (req, res) => {
-  const resPerPage = 100;
+  const resPerPage = 20;
   const page = req.query.page || 1;
 
   Reading.find({deviceId: req.params.deviceId}).skip((resPerPage * page) - resPerPage).limit(resPerPage).then((readings) => {
