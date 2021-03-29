@@ -32,4 +32,35 @@ router.get('/', (req, res) => {
   });
 });
 
+/**
+ * @swagger
+ * /{deviceId}/readings:
+ *   delete:
+ *     tags:
+ *       - Dispositivos
+ *     description: Requisição para remover todas as leituras de um dispositivo.
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: id
+ *         description: Identificador do dispositivo
+ *         in: path
+ *         required: true
+ *         type: string
+ *     responses:
+ *       200:
+ *         description: Todas as leituras removidas com sucesso.
+ *       500:
+ *         description: Falha ao processar requisição, erro ao remover leituras no Database.
+ */
+ router.delete('/:deviceId/readings', (req, res) => {
+  Reading.deleteMany({ deviceId: req.params.deviceId }).then(() => {
+    res.statusCode = 200;
+    res.send();
+  }).catch(() => {
+    res.statusCode = 500;
+    res.send();
+  });
+});
+
 module.exports = router;
