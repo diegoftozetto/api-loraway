@@ -34,7 +34,7 @@ router.get('/', (req, res) => {
 
 /**
  * @swagger
- * /{deviceId}/readings:
+ * /devices/{deviceId}/readings:
  *   delete:
  *     tags:
  *       - Dispositivos
@@ -42,11 +42,11 @@ router.get('/', (req, res) => {
  *     produces:
  *       - application/json
  *     parameters:
- *       - name: id
+ *       - name: deviceId
  *         description: Identificador do dispositivo
  *         in: path
  *         required: true
- *         type: string
+ *         type: integer
  *     responses:
  *       200:
  *         description: Todas as leituras removidas com sucesso.
