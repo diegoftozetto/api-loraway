@@ -7,10 +7,23 @@ const Reading = mongoose.model("readings");
 
 const validate = require("../control/validate-input-field");
 
+const customLabels = {
+  totalDocs: 'itemCount',
+  docs: 'readings',
+  limit: 'perPage',
+  page: 'currentPage',
+  nextPage: 'next',
+  prevPage: 'prev',
+  totalPages: 'pageCount',
+  pagingCounter: 'slNo',
+  meta: 'paginator',
+};
+
 /**
  * @swagger
  * definitions:
- *   Readings:
+ *   ItemsReadings:
+ *     type: object
  *     properties:
  *       deviceId:
  *         type: number
@@ -20,6 +33,57 @@ const validate = require("../control/validate-input-field");
  *         type: number
  *       attributes:
  *         type: object
+ *   ItemsReadingsAll:
+ *     type: object
+ *     properties:
+ *       _id:
+ *         type: number
+ *       deviceId:
+ *         type: number
+ *       messageId:
+ *         type: number
+ *       timestamp:
+ *         type: number
+ *       attributes:
+ *         type: object
+ *       createdAt:
+ *         type: string
+ *         format: date-time
+ *       updatedAt:
+ *         type: string
+ *         format: date-time
+ *   Readings:
+ *     type: array
+ *     items:
+ *      $ref: "#/definitions/ItemsReadingsAll"
+ *   Paginator:
+ *     type: object
+ *     properties:
+ *       itemCount:
+ *         type: number
+ *       perPage:
+ *         type: number
+ *       pageCount:
+ *         type: number
+ *       currentPage:
+ *         type: number
+ *       slNo:
+ *         type: number
+ *       hasPrevPage:
+ *         type: boolean
+ *       hasNextPage:
+ *         type: boolean
+ *       prev:
+ *         type: number
+ *       next:
+ *         type: number
+ *   Docs:
+ *     type: object
+ *     properties:
+ *       readings:
+ *        $ref: "#/definitions/Readings"
+ *       paginator:
+ *        $ref: "#/definitions/Paginator"
  */
 
 /**
@@ -31,16 +95,29 @@ const validate = require("../control/validate-input-field");
  *     description: Requisição de lista com todos as leituras.
  *     produces:
  *       - application/json
+*     parameters:
+ *       - name: page
+ *         description: Página atual.
+ *         in: query
+ *         required: false
+ *         type: integer
  *     responses:
  *       200:
  *         description: Um Array com todos as leituras.
  *         schema:
- *           $ref: '#/definitions/Readings'
+ *          $ref: '#/definitions/Docs'
  *       500:
  *          description: Falha ao processar requisição, erro ao buscar leituras no Database.
  */
 router.get('/', (req, res) => {
-  Reading.find().sort({ timestamp: 'asc' }).then((readings) => {
+  const options = {
+    page: req.query.page || 1,
+    limit: 10,
+    customLabels,
+    sort: { timestamp: 'desc' }
+  };
+
+  Reading.paginate({}, options).then((readings) => {
     res.statusCode = 200;
     res.setHeader('Content-Type', 'application/json');
     res.json(readings);
@@ -74,29 +151,18 @@ router.get('/', (req, res) => {
  *       200:
  *         description: Um Array com as leituras.
  *         schema:
- *           $ref: '#/definitions/Readings'
+ *           $ref: '#/definitions/Docs'
  *       404:
  *          description: Nenhuma leitura encontrada.
  *       500:
  *          description: Falha ao processar requisição, erro ao buscar leituras no Database.
  */
-router.get('/:deviceId?', (req, res) => {
-  const customLabels = {
-    totalDocs: 'itemCount',
-    docs: 'readings',
-    limit: 'perPage',
-    page: 'currentPage',
-    nextPage: 'next',
-    prevPage: 'prev',
-    totalPages: 'pageCount',
-    pagingCounter: 'slNo',
-    meta: 'paginator',
-  };
-
+router.get('/:deviceId', (req, res) => {
   const options = {
     page: req.query.page || 1,
     limit: 50,
     customLabels,
+    sort: { timestamp: 'desc' }
   };
 
   Reading.paginate({deviceId: req.params.deviceId}, options).then((readings) => {
@@ -129,7 +195,7 @@ router.get('/:deviceId?', (req, res) => {
  *         in: body
  *         required: true
  *         schema:
- *           $ref: '#/definitions/Readings'
+ *           $ref: '#/definitions/ItemsReadings'
  *     responses:
  *       201:
  *         description: Leitura criada com sucesso.
