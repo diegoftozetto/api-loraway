@@ -1,4 +1,6 @@
 const mongoose = require("mongoose");
+var mongoosePaginate = require("mongoose-paginate-v2");
+
 const Schema = mongoose.Schema;
 
 const ReadingSchema = new Schema({
@@ -20,4 +22,5 @@ const ReadingSchema = new Schema({
   }
 }, { timestamps: true });
 
+ReadingSchema.plugin(mongoosePaginate);
 mongoose.model("readings", ReadingSchema);

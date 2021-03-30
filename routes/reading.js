@@ -76,10 +76,25 @@ router.get('/', (req, res) => {
  *          description: Falha ao processar requisição, erro ao buscar leituras no Database.
  */
 router.get('/:deviceId?', (req, res) => {
-  const resPerPage = 20;
-  const page = req.query.page || 1;
+  const customLabels = {
+    totalDocs: 'itemCount',
+    docs: 'readings',
+    limit: 'perPage',
+    page: 'currentPage',
+    nextPage: 'next',
+    prevPage: 'prev',
+    totalPages: 'pageCount',
+    pagingCounter: 'slNo',
+    meta: 'paginator',
+  };
 
-  Reading.find({deviceId: req.params.deviceId}).skip((resPerPage * page) - resPerPage).limit(resPerPage).then((readings) => {
+  const options = {
+    page: req.query.page || 1,
+    limit: 50,
+    customLabels,
+  };
+
+  Reading.paginate({deviceId: req.params.deviceId}, options).then((readings) => {
     if(!readings) {
       res.statusCode = 404;
       res.send();
