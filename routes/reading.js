@@ -65,6 +65,11 @@ router.get('/', (req, res) => {
  *         in: path
  *         required: true
  *         type: integer
+ *       - name: page
+ *         description: Página atual.
+ *         in: query
+ *         required: false
+ *         type: integer
  *     responses:
  *       200:
  *         description: Um Array com as leituras.
